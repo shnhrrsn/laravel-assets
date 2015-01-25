@@ -7,7 +7,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 	}
 
 	public function boot() {
-		if($this->app->isAlias('router')) {
+		if($this->app->resolved('router') || $this->app->bound('router')) {
 			$router = $this->app['router'];
 
 			$router->get('assets/img/{a?}/{b?}/{c?}/{d?}/{e?}', '\Assets\Http\Controller@img');
@@ -20,7 +20,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 
 		$this->commands('\Assets\Console\PublishCommand', '\Assets\Console\UnpublishCommand');
 
-		if($this->app->isAlias('view')) {
+		if($this->app->resolved('view') || $this->app->bound('view')) {
 			$this->app['view']->getEngineResolver()->resolve('blade')->getCompiler()->extend(function($view, $compiler) {
 				$pattern = $compiler->createMatcher('assetPath');
 
