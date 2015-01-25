@@ -50,6 +50,7 @@ class PublishCommand extends \Illuminate\Console\Command {
 		foreach(Finder::create()->files()->in($this->assetsPath) as $file) {
 			$relativePath = $file->getRelativePath();
 			if(empty($relativePath) || preg_match($rawDirsPattern, $relativePath)) continue;
+			if(substr($file->getBasename(), 0, 1) === '_') continue;
 
 			$asset = Asset::make($file->getRealPath());
 
