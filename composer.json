@@ -1,0 +1,28 @@
+{
+	"name": "shnhrrsn/laravel-assets",
+	"description": "Asset management for Laravel.",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Shaun Harrison",
+			"email": "mail@shnhrrsn.com"
+		}
+	],
+	"require": {
+		"php": ">=5.4.0",
+		"illuminate/console": "5.0.*",
+        "illuminate/support": "5.0.*",
+		"symfony/process": "2.6.*",
+		"symfony/finder": "2.*"
+	},
+	"autoload": {
+		"psr-4": {
+			"Assets\\": ""
+		}
+	},
+	"suggest": {
+		"illuminate/view": "Allows Asset to hook into Blade",
+		"illuminate/html": "Allows Asset to extend HtmlBuilder to easily create asset paths"
+	},
+	"minimum-stability": "dev"
+}
