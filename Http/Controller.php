@@ -93,8 +93,6 @@ class Controller extends \Illuminate\Routing\Controller {
 	 * @param int $lastModified If null, filemtime will be used, should return a unix timestamp
 	 */
 	private function process($contentType, Process $process = null, $lastModified = null) {
-		$lastModified = null;
-
 		if($lastModified === null) {
 			$lastModified = filemtime($this->path);
 		}
