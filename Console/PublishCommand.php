@@ -22,8 +22,8 @@ class PublishCommand extends \Illuminate\Console\Command {
 
 		Asset::$autoMinifyDefault = $app->environment('production');
 
-		$this->resourcesPath = resources_path();
-		$this->assetsPath = resources_path('assets');
+		$this->resourcesPath = base_path('resources');
+		$this->assetsPath = base_path('resources/assets');
 		$this->publishPath = public_path();
 		$this->oldAssets = config('published_assets');
 
