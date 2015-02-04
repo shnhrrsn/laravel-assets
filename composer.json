@@ -21,8 +21,7 @@
 		}
 	},
 	"suggest": {
-		"illuminate/view": "Allows Asset to hook into Blade",
-		"illuminate/html": "Allows Asset to extend HtmlBuilder to easily create asset paths"
+		"illuminate/html": "Allows Asset to extend HtmlBuilder and add support for `HTML::assetPath()`"
 	},
 	"minimum-stability": "dev"
 }
