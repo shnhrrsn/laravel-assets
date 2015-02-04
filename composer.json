@@ -11,14 +11,17 @@
 	"require": {
 		"php": ">=5.4.0",
 		"illuminate/console": "5.0.*",
-        "illuminate/support": "5.0.*",
+		"illuminate/support": "5.0.*",
 		"symfony/process": "2.6.*",
 		"symfony/finder": "2.*"
 	},
 	"autoload": {
 		"psr-4": {
 			"Assets\\": ""
-		}
+		},
+		"files": [
+			"helpers.php"
+		]
 	},
 	"suggest": {
 		"illuminate/html": "Allows Asset to extend HtmlBuilder and add support for `HTML::assetPath()`"
