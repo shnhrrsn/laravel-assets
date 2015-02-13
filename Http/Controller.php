@@ -11,8 +11,10 @@ class Controller extends \Illuminate\Routing\Controller {
 	private $extension;
 
 	public function __construct() {
+		list($uri) = explode('?', $_SERVER['REQUEST_URI']);
+
 		$this->local = app()->environment('local');
-		$this->path = base_path() . '/resources/' . trim($_SERVER['REQUEST_URI'], '/');
+		$this->path = base_path() . '/resources/' . trim($uri, '/');
 		$this->extension = substr($this->path, strrpos($this->path, '.') + 1);
 
 		if(!file_exists($this->path)) {
