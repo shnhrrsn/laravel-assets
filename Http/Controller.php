@@ -77,10 +77,6 @@ class Controller extends \Illuminate\Routing\Controller {
 		return $this->process('text/css', null);
 	}
 
-	public function js() {
-		return $this->process('application/javascript', null);
-	}
-
 	public function compile($type) {
 		$asset = Asset::make($this->path);
 		return $this->process($asset->getMime(), $asset->getCompileProcess(), $asset->getLastModified());

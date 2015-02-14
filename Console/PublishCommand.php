@@ -15,7 +15,7 @@ class PublishCommand extends \Illuminate\Console\Command {
 	private $assets = [ ];
 	private $oldAssets = [ ];
 
-	private $rawDirs = [ 'img', 'fonts', 'font', 'js', 'css' ];
+	private $rawDirs = [ 'img', 'fonts', 'font', 'css' ];
 
 	public function fire() {
 		$app = $this->laravel;

@@ -9,7 +9,8 @@ class Asset {
 	protected static $compilers = [
 		'scss' => 'ScssCompiler',	
 		'less' => 'LessCompiler',
-		'coffee' => 'CoffeeCompiler'
+		'coffee' => 'CoffeeCompiler',
+		'js' => 'JavascriptCompiler'
 	];
 
 	protected $autoMinify;

@@ -57,11 +57,11 @@ This will pre-compile all assets and move them into the `public/` directory.  As
 
 #### Images and Fonts
 
-Files stored in `/resources/assets/img`, `/resources/assets/font`, `/resources/assets/css` and `/resources/assets/js` are served as-is (with proper content types) and are copied directly into the same directories in `/public` during `assets:publish`.
+Files stored in `/resources/assets/img`, `/resources/assets/font` and `/resources/assets/css` are served as-is (with proper content types) and are copied directly into the same directories in `/public` during `assets:publish`.
 
-CSS and JS minification is not supported at this point for raw files.  Minification is provided for scss, less and coffee files via their compilers.
+CSS minification is not supported at this point for raw files.  Minification is provided for scss, less, coffee and js files via their compilers.
 
 ## TODO
 
 * Add artisan command to setup environment and install required tools (scss, compass, coffee, importer, less, etc.)
-* Add minification support for raw js/css files.
+* Add minification support for raw css files.

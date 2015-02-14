@@ -14,7 +14,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 			$router->get('assets/font/{a?}/{b?}/{c?}/{d?}/{e?}', '\Assets\Http\Controller@font');
 			$router->get('assets/fonts/{a?}/{b?}/{c?}/{d?}/{e?}', '\Assets\Http\Controller@font');
 			$router->get('assets/css/{a?}/{b?}/{c?}/{d?}/{e?}', '\Assets\Http\Controller@css');
-			$router->get('assets/js/{a?}/{b?}/{c?}/{d?}/{e?}', '\Assets\Http\Controller@js');
 			$router->get('assets/{type}/{a?}/{b?}/{c?}/{d?}/{e?}', '\Assets\Http\Controller@compile');
 		}
 
