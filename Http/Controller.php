@@ -11,7 +11,7 @@ class Controller extends \Illuminate\Routing\Controller {
 	private $extension;
 
 	public function __construct() {
-		list($uri) = explode('?', $_SERVER['REQUEST_URI']);
+		list($uri) = explode('?', array_get($_SERVER, 'REQUEST_URI'));
 
 		$this->local = app()->environment('local');
 		$this->path = base_path() . '/resources/' . trim($uri, '/');
