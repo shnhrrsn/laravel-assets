@@ -117,8 +117,15 @@ class Controller extends \Illuminate\Routing\Controller {
 			} else {
 				header('X-Cached: false');
 
+				$paths = ['/bin/', '/usr/bin/', '/usr/local/bin/'];
+				foreach($paths as $k => $v) {
+					if(!file_exists($v)) {
+						unset($paths[$k]);
+					}
+				}
+
 				$process->setEnv([
-					'PATH' => trim(`echo \$PATH`) . ':/usr/local/bin/'
+					'PATH' => trim(`echo \$PATH`) . ':' . implode(':', $paths)
 				]);
 
 				$out = '';

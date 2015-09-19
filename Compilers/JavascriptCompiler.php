@@ -6,7 +6,7 @@ class JavascriptCompiler extends Compiler {
 
 	public function getCompileProcess($path, $context = null) {
 		$uglify = $this->autoMinify ? ' | uglifyjs --compress drop_console=true' : '';
-		return new Process('cat ' . $path . $uglify);
+		return new Process('cat ' . escapeshellarg($path) . $uglify);
 	}
 
 	public function getLastModified($file, $newest = 0) {
