@@ -11,7 +11,7 @@ class Controller extends \Illuminate\Routing\Controller {
 	private $extension;
 
 	public function __construct() {
-		list($uri) = explode('?', array_get($_SERVER, 'REQUEST_URI'));
+		list($uri) = explode('?', array_get($_SERVER, 'REQUEST_URI', ''));
 
 		$this->local = app()->environment('local');
 		$this->path = base_path() . '/resources/' . trim($uri, '/');
@@ -132,18 +132,18 @@ class Controller extends \Illuminate\Routing\Controller {
 				$err = '';
 				$status = $process->run(function($type, $line) use(&$out, &$err) {
 					if($type === 'out') {
-						$out .= $line . "\n";
+						$out .= $line . PHP_EOL;
 					} else if($type === 'err') {
-						$err .= $line . "\n";
+						$err .= $line . PHP_EOL;
 					}
 				});
 
 				if($status === 0) {
 					return $out;
 				} else {
-					echo "/* PATH: " . $process->getEnv()['PATH'] .  " */\n";
-					echo "/* TIME: " . date('Y-m-d H:i T') .  " */\n";
-					echo "/* COMMAND: " . $process->getCommandLine() .  " */\n";
+					echo '/* PATH: ' . $process->getEnv()['PATH'] . ' */' . PHP_EOL;
+					echo '/* TIME: ' . date('Y-m-d H:i T') . ' */' . PHP_EOL;
+					echo '/* COMMAND: ' . $process->getCommandLine() . ' */' . PHP_EOL;
 					echo $err;
 					exit;
 				}

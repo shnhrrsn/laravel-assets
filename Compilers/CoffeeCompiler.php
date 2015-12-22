@@ -8,8 +8,8 @@ class CoffeeCompiler extends Compiler {
 		$out = escapeshellarg(tempnam(sys_get_temp_dir(), sha1($path)));
 		$uglify = $this->autoMinify ? ' | uglifyjs --compress drop_console=true' : '';
 		return new Process(
-			'bash -c "importer ' . escapeshellarg($path) . ' ' . $out . 
-				' && cat ' . $out . $uglify . 
+			'bash -c "importer ' . escapeshellarg($path) . ' ' . $out .
+				' && cat ' . $out . $uglify .
 				' && rm ' . $out . '"'
 		);
 	}

@@ -65,10 +65,10 @@ class PublishCommand extends \Illuminate\Console\Command {
 			$err = '';
 			$status = $process->run(function($type, $line) use(&$out, &$err) {
 				if($type === 'out') {
-					$out .= $line . "\n";
-					$err .= $line . "\n";
+					$out .= $line . PHP_EOL;
+					$err .= $line . PHP_EOL;
 				} else if($type === 'err') {
-					$err .= $line . "\n";
+					$err .= $line . PHP_EOL;
 				}
 			});
 
