@@ -10,9 +10,9 @@
 	],
 	"require": {
 		"php": ">=5.4.0",
-		"illuminate/console": "5.1.*",
-		"illuminate/support": "5.1.*",
-		"symfony/process": "2.7.*",
+		"illuminate/console": "5.2.*",
+		"illuminate/support": "5.2.*",
+		"symfony/process": "2.8.*|3.0.*",
 		"symfony/finder": "2.*"
 	},
 	"autoload": {
@@ -24,7 +24,7 @@
 		]
 	},
 	"suggest": {
-		"illuminate/html": "Allows Asset to extend HtmlBuilder and add support for `HTML::assetPath()`"
+		"laravelcollective/html": "Allows Asset to extend HtmlBuilder and add support for `HTML::assetPath()`"
 	},
 	"minimum-stability": "dev"
 }

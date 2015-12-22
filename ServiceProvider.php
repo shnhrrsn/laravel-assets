@@ -19,8 +19,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 
 		$this->commands('\Assets\Console\PublishCommand', '\Assets\Console\UnpublishCommand');
 
-		if(class_exists('\Illuminate\Html\HtmlBuilder')) {
-			\Illuminate\Html\HtmlBuilder::macro('assetPath', function($path) {
+		if(class_exists('\Collective\Html\HtmlBuilder')) {
+			\Collective\Html\HtmlBuilder::macro('assetPath', function($path) {
 				return Asset::publishedPath($path);
 			});
 		}
