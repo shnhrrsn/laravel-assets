@@ -1,9 +1,11 @@
 <?php namespace Assets\Console;
 
-use Assets\Asset;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Finder\SplFileInfo;
+
+use Assets\Asset;
+use Assets\Exceptions\CompilationException;
 
 class PublishCommand extends \Illuminate\Console\Command {
 	public $name = 'assets:publish';
@@ -53,37 +55,35 @@ class PublishCommand extends \Illuminate\Console\Command {
 			if(substr($file->getBasename(), 0, 1) === '_') continue;
 
 			$asset = Asset::make($file->getRealPath());
+			$out = null;
 
-			$process = $asset->getCompileProcess();
+			try {
+				$out = $asset->compile();
+			} catch(CompilationException $e) {
+				$this->error($e->getMessage());
 
-			$this->info($process->getCommandline());
-			$process->setEnv([
-				'PATH' => trim(`echo \$PATH`) . ':/usr/local/bin/'
-			]);
-
-			$out = '';
-			$err = '';
-			$status = $process->run(function($type, $line) use(&$out, &$err) {
-				if($type === 'out') {
-					$out .= $line . PHP_EOL;
-					$err .= $line . PHP_EOL;
-				} else if($type === 'err') {
-					$err .= $line . PHP_EOL;
+				if(is_array($e->context)) {
+					foreach($e->context as $key => $value) {
+						$this->error(' --> ' . strtoupper($key) . ': ' . $value);
+					}
+				} else if(is_string($e->context)) {
+					$this->error(' --> ' . $e->context);
 				}
-			});
+
+				if(!empty($e->log)) {
+					$this->error(' --> ' . $e->log);
+				}
+
+				exit(1);
+			}
 
 			$name = $file->getRelativePathname();
 			$name = $asset->getType() . substr($name, strpos($name, '/'));
 			$name = substr($name, 0, strrpos($name, '.')) . '-' . md5($out) . '.' . $asset->getType();
 
-			if($status === 0) {
-				$this->storeAsset($file->getRealPath(), $this->publishPath . '/' . $name, $out, $asset->getLastModified());
-			} else {
-				$this->error($err);
-				exit(1);
-			}
+			$this->storeAsset($file->getRealPath(), $this->publishPath . '/' . $name, $out, $asset->getLastModified());
 
-			unset($out, $err, $process);
+			unset($out, $err, $asset);
 		}
 	}
 

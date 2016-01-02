@@ -1,8 +1,11 @@
 <?php namespace Assets\Http;
 
 use Closure;
-use Assets\Asset;
+
 use Symfony\Component\Process\Process;
+
+use Assets\Asset;
+use Assets\Exceptions\CompilationException;
 
 class Controller extends \Illuminate\Routing\Controller {
 	private $local;
@@ -79,7 +82,7 @@ class Controller extends \Illuminate\Routing\Controller {
 
 	public function compile($type) {
 		$asset = Asset::make($this->path);
-		return $this->process($asset->getMime(), $asset->getCompileProcess(), $asset->getLastModified());
+		return $this->process($asset->getMime(), $asset, $asset->getLastModified());
 	}
 
 	/**
@@ -87,10 +90,10 @@ class Controller extends \Illuminate\Routing\Controller {
 	 * Automatically sends a 404 and exits if path doesn't exist or fails a security check
 	 *
 	 * @param string $contentType
-	 * @param Process $process Process should compile asset and write to stdout.  If null, path contents will be ouputed
+	 * @param Asset $asset Asset to compile.  If null, path contents will be ouputed
 	 * @param int $lastModified If null, filemtime will be used, should return a unix timestamp
 	 */
-	private function process($contentType, Process $process = null, $lastModified = null) {
+	private function process($contentType, Asset $asset = null, $lastModified = null) {
 		if($lastModified === null) {
 			$lastModified = filemtime($this->path);
 		}
@@ -111,41 +114,25 @@ class Controller extends \Illuminate\Routing\Controller {
 		header('ETag: ' . $etag);
 		header('Content-Type: ' . $contentType . '; charset=utf-8');
 
-		$compile = function() use ($process) {
-			if($process === null) {
+		$compile = function() use ($asset) {
+			if($asset === null) {
 				return file_get_contents($this->path);
 			} else {
 				header('X-Cached: false');
 
-				$paths = ['/bin/', '/usr/bin/', '/usr/local/bin/'];
-				foreach($paths as $k => $v) {
-					if(!file_exists($v)) {
-						unset($paths[$k]);
+				try {
+					return $asset->compile();
+				} catch(CompilationException $e) {
+					if(is_array($e->context)) {
+						foreach($e->context as $key => $value) {
+							printf('/* %s: %s */%s', strtoupper($key), $value, PHP_EOL);
+						}
+					} else if(is_string($e->context)) {
+						printf('/* %s */%s', $e->context, PHP_EOL);
 					}
-				}
 
-				$process->setEnv([
-					'PATH' => trim(`echo \$PATH`) . ':' . implode(':', $paths)
-				]);
-
-				$out = '';
-				$err = '';
-				$status = $process->run(function($type, $line) use(&$out, &$err) {
-					if($type === 'out') {
-						$out .= $line . PHP_EOL;
-					} else if($type === 'err') {
-						$err .= $line . PHP_EOL;
-					}
-				});
-
-				if($status === 0) {
-					return $out;
-				} else {
-					echo '/* PATH: ' . $process->getEnv()['PATH'] . ' */' . PHP_EOL;
-					echo '/* TIME: ' . date('Y-m-d H:i T') . ' */' . PHP_EOL;
-					echo '/* COMMAND: ' . $process->getCommandLine() . ' */' . PHP_EOL;
-					echo $err;
-					exit;
+					echo $e->log;
+					exit(1);
 				}
 			}
 		};

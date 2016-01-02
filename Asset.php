@@ -26,11 +26,8 @@ class Asset {
 		$this->autoMinify = $autoMinify === null ? static::$autoMinifyDefault : $autoMinify;
 	}
 
-	/**
-	 * @return Symfony\Component\Process\Process
-	 */
-	public function getCompileProcess($context = null) {
-		return $this->getCompiler()->getCompileProcess($this->path, $context);
+	public function compile($context = null) {
+		return $this->getCompiler()->compile($this->path, $context);
 	}
 
 	public function getLastModified($newest = 0) {

@@ -2,9 +2,9 @@
 
 use Symfony\Component\Process\Process;
 
-class JavascriptCompiler extends Compiler {
+class JavascriptCompiler extends ProcessCompiler {
 
-	public function getCompileProcess($path, $context = null) {
+	protected function getCompileProcess($path, $context = null) {
 		$uglify = $this->autoMinify ? ' | uglifyjs --compress drop_console=true' : '';
 		return new Process('cat ' . escapeshellarg($path) . $uglify);
 	}

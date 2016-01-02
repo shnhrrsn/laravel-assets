@@ -2,9 +2,9 @@
 
 use Symfony\Component\Process\Process;
 
-class LessCompiler extends Compiler {
+class LessCompiler extends ProcessCompiler {
 
-	public function getCompileProcess($path, $context = null) {
+	protected function getCompileProcess($path, $context = null) {
 		return new Process('lessc --yui-compress ' . escapeshellarg($path));
 	}
 

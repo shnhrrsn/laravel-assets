@@ -2,9 +2,9 @@
 
 use Symfony\Component\Process\Process;
 
-class CoffeeCompiler extends Compiler {
+class CoffeeCompiler extends ProcessCompiler {
 
-	public function getCompileProcess($path, $context = null) {
+	protected function getCompileProcess($path, $context = null) {
 		$out = escapeshellarg(tempnam(sys_get_temp_dir(), sha1($path)));
 		$uglify = $this->autoMinify ? ' | uglifyjs --compress drop_console=true' : '';
 		return new Process(

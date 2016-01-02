@@ -9,7 +9,8 @@ abstract class Compiler {
 		$this->autoMinify = $autoMinify;
 	}
 
-	public abstract function getCompileProcess($path, $context = null);
+	public abstract function compile($path, $context = null);
+
 	public abstract function getLastModified($file, $newest = 0);
 
 	public abstract function getMime();

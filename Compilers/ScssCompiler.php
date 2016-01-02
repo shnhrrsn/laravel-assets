@@ -2,9 +2,9 @@
 
 use Symfony\Component\Process\Process;
 
-class ScssCompiler extends Compiler {
+class ScssCompiler extends ProcessCompiler {
 
-	public function getCompileProcess($path, $context = null) {
+	protected function getCompileProcess($path, $context = null) {
 		if(empty($context)) {
 			if($this->autoMinify) {
 				$context = 'compressed';
