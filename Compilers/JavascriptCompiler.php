@@ -4,9 +4,16 @@ use Symfony\Component\Process\Process;
 
 class JavascriptCompiler extends ProcessCompiler {
 
+	public function compile($path, $context = null) {
+		if($this->autoMinify) {
+			return parent::compile($path, $context);
+		} else {
+			return file_get_contents($path);
+		}
+	}
+
 	protected function getCompileProcess($path, $context = null) {
-		$uglify = $this->autoMinify ? ' | uglifyjs --compress drop_console=true' : '';
-		return new Process('cat ' . escapeshellarg($path) . $uglify);
+		return new Process('uglifyjs --compress drop_console=true ' . escapeshellarg($path));
 	}
 
 	public function getLastModified($file, $newest = 0) {
