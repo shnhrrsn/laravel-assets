@@ -22,10 +22,10 @@ abstract class ProcessCompiler extends Compiler {
 	protected abstract function getCompileProcess($path, $context = null);
 
 	public function compile($path, $context = null) {
-		return $this->compileProcess($this->getCompileProcess($path, $context));
+		return $this->compileProcess($this->getCompileProcess($path, $context), $path);
 	}
 
-	protected function compileProcess(Process $process) {
+	protected function compileProcess(Process $process, $path) {
 		$process->setEnv([
 			'PATH' => trim(`echo \$PATH`) . ':' . implode(':', $this->paths)
 		]);

@@ -12,7 +12,7 @@ class CoffeeCompiler extends ProcessCompiler {
 		touch($tmp); // Ensures file always exists for unlinking
 
 		try {
-			$this->compileProcess(new Process('importer ' . escapeshellarg($path) . ' ' . escapeshellarg($tmp)));
+			$this->compileProcess(new Process('importer ' . escapeshellarg($path) . ' ' . escapeshellarg($tmp)), $path);
 		} catch(CompilationException $e) {
 			unlink($tmp);
 			throw $e;
@@ -24,7 +24,7 @@ class CoffeeCompiler extends ProcessCompiler {
 			return $output;
 		} else {
 			try {
-				return $this->compileProcess(new Process('uglifyjs --compress drop_console=true ' . escapeshellarg($tmp)));
+				return $this->compileProcess(new Process('uglifyjs --compress drop_console=true ' . escapeshellarg($tmp)), $path);
 			} catch(CompilationException $e) {
 				throw $e;
 			} finally {
