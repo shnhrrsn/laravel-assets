@@ -1,17 +1,40 @@
 <?php namespace Assets\Compilers;
 
+use BadMethodCallException;
+
 use Symfony\Component\Process\Process;
+use Assets\Exceptions\CompilationException;
 
 class CoffeeCompiler extends ProcessCompiler {
 
+	public function compile($path, $context = null) {
+		$tmp = tempnam(sys_get_temp_dir(), sha1($path)) . '.js';
+		touch($tmp); // Ensures file always exists for unlinking
+
+		try {
+			$this->compileProcess(new Process('importer ' . escapeshellarg($path) . ' ' . escapeshellarg($tmp)));
+		} catch(CompilationException $e) {
+			unlink($tmp);
+			throw $e;
+		}
+
+		if(!$this->autoMinify) {
+			$output = file_get_contents($tmp);
+			unlink($tmp);
+			return $output;
+		} else {
+			try {
+				return $this->compileProcess(new Process('uglifyjs --compress drop_console=true ' . escapeshellarg($tmp)));
+			} catch(CompilationException $e) {
+				throw $e;
+			} finally {
+				unlink($tmp);
+			}
+		}
+	}
+
 	protected function getCompileProcess($path, $context = null) {
-		$out = escapeshellarg(tempnam(sys_get_temp_dir(), sha1($path)));
-		$uglify = $this->autoMinify ? ' | uglifyjs --compress drop_console=true' : '';
-		return new Process(
-			'bash -c "importer ' . escapeshellarg($path) . ' ' . $out .
-				' && cat ' . $out . $uglify .
-				' && rm ' . $out . '"'
-		);
+		throw new BadMethodCallException();
 	}
 
 	public function getLastModified($file, $newest = 0) {
