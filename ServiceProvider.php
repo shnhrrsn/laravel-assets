@@ -17,7 +17,10 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 			$router->get('assets/{type}/{a?}/{b?}/{c?}/{d?}/{e?}', '\Assets\Http\Controller@compile');
 		}
 
-		$this->commands('\Assets\Console\PublishCommand', '\Assets\Console\UnpublishCommand');
+		$this->commands(
+			Console\PublishCommand::class,
+			Console\UnpublishCommand::class
+		);
 
 		if(class_exists('\Collective\Html\HtmlBuilder')) {
 			\Collective\Html\HtmlBuilder::macro('assetPath', function($path) {

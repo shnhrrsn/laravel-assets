@@ -7,10 +7,10 @@ class Asset {
 	public static $autoMinifyDefault = false;
 
 	protected static $compilers = [
-		'scss' => 'ScssCompiler',
-		'less' => 'LessCompiler',
-		'coffee' => 'CoffeeCompiler',
-		'js' => 'JavascriptCompiler'
+		'scss' => Compilers\ScssCompiler::class,
+		'less' => Compilers\LessCompiler::class,
+		'coffee' => Compilers\CoffeeCompiler::class,
+		'js' => Compilers\JavascriptCompiler::class
 	];
 
 	protected $autoMinify;
@@ -54,7 +54,7 @@ class Asset {
 		return $this->compiler;
 	}
 
-	public static function registerCompiler($extension, \Assets\Compilers\Compiler $compiler) {
+	public static function registerCompiler($extension, Compilers\Compiler $compiler) {
 		static::$compilers[$extension] = $compiler;
 	}
 
@@ -70,8 +70,7 @@ class Asset {
 		$compiler = static::$compilers[$extension];
 
 		if(is_string($compiler)) {
-			$className = '\Assets\Compilers\\' . $compiler;
-			$compiler = new $className(static::$autoMinifyDefault);
+			$compiler = new $compiler(static::$autoMinifyDefault);
 			static::$compilers[$extension] = $compiler;
 		}
 
