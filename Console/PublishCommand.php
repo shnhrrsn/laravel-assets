@@ -11,13 +11,13 @@ class PublishCommand extends \Illuminate\Console\Command {
 	public $name = 'assets:publish';
 	public $description = 'Compies and publishes all assets';
 
-	private $resourcesPath;
-	private $assetsPath;
-	private $publishPath;
-	private $assets = [ ];
-	private $oldAssets = [ ];
+	protected $resourcesPath;
+	protected $assetsPath;
+	protected $publishPath;
+	protected $assets = [ ];
+	protected $oldAssets = [ ];
 
-	private $rawDirs = [ 'img', 'fonts', 'font', 'css' ];
+	protected $rawDirs = [ 'img', 'fonts', 'font', 'css' ];
 
 	public function fire() {
 		$app = $this->laravel;
@@ -104,7 +104,7 @@ class PublishCommand extends \Illuminate\Console\Command {
 		}
 	}
 
-	private function storeAsset($asset, $file, $contents, $modifiedTime = null) {
+	protected function storeAsset($asset, $file, $contents, $modifiedTime = null) {
 		if(!file_exists(dirname($file))) {
 			mkdir(dirname($file), 0777, true);
 		}
