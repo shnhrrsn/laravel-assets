@@ -49,10 +49,12 @@ class PublishCommand extends BaseCommand {
 			if(empty($relativePath)) continue;
 			if(substr($file->getBasename(), 0, 1) === '_') continue;
 
-			$asset = Asset::make($file->getRealPath());
+			$path = $file->getRealPath();
+			$asset = Asset::make($path);
 			$out = null;
 
 			try {
+				$this->info('Compiling ' . $path);
 				$out = $asset->compile();
 			} catch(CompilationException $e) {
 				$this->error($e->getMessage());
@@ -144,7 +146,7 @@ class PublishCommand extends BaseCommand {
 	protected function writeConfig($config) {
 		$file = "<?php\n\n";
 		$file .= 'return ' . var_export($config, true) . ';';
-		file_put_contents(base_path() . "/config/published_assets.php", $file);
+		file_put_contents(base_path() . '/config/published_assets.php', $file);
 	}
 
 }
