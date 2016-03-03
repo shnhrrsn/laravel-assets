@@ -2,7 +2,7 @@
 
 use Symfony\Component\Finder\Finder;
 
-class UnpublishCommand extends \Illuminate\Console\Command {
+class UnpublishCommand extends BaseCommand {
 	public $name = 'assets:unpublish';
 	public $description = 'Removes published assets';
 
@@ -13,7 +13,7 @@ class UnpublishCommand extends \Illuminate\Console\Command {
 		foreach(config('published_assets') as $asset) {
 			$this->info('Removing asset: ' . $asset);
 			$dirs[] = realpath(dirname($asset));
-			@unlink($asset);
+			$this->removeAsset($asset);
 		}
 
 		foreach($dirs as $dir) {

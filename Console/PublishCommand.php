@@ -7,7 +7,7 @@ use Symfony\Component\Finder\SplFileInfo;
 use Assets\Asset;
 use Assets\Exceptions\CompilationException;
 
-class PublishCommand extends \Illuminate\Console\Command {
+class PublishCommand extends BaseCommand {
 	public $name = 'assets:publish';
 	public $description = 'Compies and publishes all assets';
 
@@ -40,10 +40,7 @@ class PublishCommand extends \Illuminate\Console\Command {
 		}
 
 		$this->writeConfig($this->assets);
-
-		foreach($this->oldAssets as $asset) {
-			@unlink($asset);
-		}
+		$this->removeAssets($this->oldAssets);
 	}
 
 	private function compile() {
@@ -130,7 +127,13 @@ class PublishCommand extends \Illuminate\Console\Command {
 		}
 	}
 
-	private function writeConfig($config) {
+	protected function removeAssets($assets) {
+		foreach($assets as $asset) {
+			$this->removeAsset($asset);
+		}
+	}
+
+	protected function writeConfig($config) {
 		$file = "<?php\n\n";
 		$file .= 'return ' . var_export($config, true) . ';';
 		file_put_contents(base_path() . "/config/published_assets.php", $file);
