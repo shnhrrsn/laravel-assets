@@ -44,11 +44,9 @@ class PublishCommand extends BaseCommand {
 	}
 
 	private function compile() {
-		$rawDirsPattern = '/^(' . implode('|', $this->rawDirs) . ')(\/|$)/i';
-
-		foreach(Finder::create()->files()->in($this->assetsPath) as $file) {
+		foreach($this->findAssets($this->assetsPath, $this->rawDirs) as $file) {
 			$relativePath = $file->getRelativePath();
-			if(empty($relativePath) || preg_match($rawDirsPattern, $relativePath)) continue;
+			if(empty($relativePath)) continue;
 			if(substr($file->getBasename(), 0, 1) === '_') continue;
 
 			$asset = Asset::make($file->getRealPath());
@@ -92,12 +90,22 @@ class PublishCommand extends BaseCommand {
 
 		$src = realpath($src);
 
-		foreach(Finder::create()->files()->in($src) as $file) {
+		foreach($this->findAssets($src) as $file) {
 			$path = $file->getRealPath();
 			$base = substr($path, strlen($src) + 1);
 			$this->info('Copying ' . $base);
 
 			$this->storeAsset($path, $dest . $base, $file->getContents(), filemtime($path));
+		}
+	}
+
+	protected function findAssets($dir, array $exclude = null) {
+		$finder = Finder::create()->files()->in($dir);
+
+		if($exclude !== null) {
+			return $finder->exclude($exclude);
+		} else {
+			return $finder;
 		}
 	}
 
