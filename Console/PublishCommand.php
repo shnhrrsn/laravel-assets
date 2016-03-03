@@ -27,7 +27,7 @@ class PublishCommand extends \Illuminate\Console\Command {
 		$this->resourcesPath = base_path('resources');
 		$this->assetsPath = base_path('resources/assets');
 		$this->publishPath = public_path();
-		$this->oldAssets = config('published_assets');
+		$this->oldAssets = $this->loadOldAssets();
 
 		if(empty($this->oldAssets)) {
 			$this->oldAssets = [ ];
@@ -102,6 +102,10 @@ class PublishCommand extends \Illuminate\Console\Command {
 
 			$this->storeAsset($path, $dest . $base, $file->getContents(), filemtime($path));
 		}
+	}
+
+	protected function loadOldAssets() {
+		return config('published_assets');
 	}
 
 	protected function storeAsset($asset, $file, $contents, $modifiedTime = null) {
