@@ -1,5 +1,6 @@
 <?php namespace Assets\Compilers;
 
+use Closure;
 use Symfony\Component\Process\Process;
 
 class LessCompiler extends ProcessCompiler {
@@ -8,13 +9,7 @@ class LessCompiler extends ProcessCompiler {
 		return new Process('lessc --yui-compress ' . escapeshellarg($path));
 	}
 
-	public function getLastModified($file, $newest = 0) {
-		if(!file_exists($file)) {
-			return $newest;
-		}
-
-		$newest = max(@filemtime($file), $newest);
-
+	protected function enumerateImports($file, Closure $callback) {
 		$contents = file_get_contents($file);
 
 		if(preg_match_all('/@import\s?([^\s;]+)/is', $contents, $m)) {
@@ -26,17 +21,15 @@ class LessCompiler extends ProcessCompiler {
 
 				if(substr($import, -5) !== '.less') {
 					if(file_exists($import . '.less')) {
-						$newest = $this->getLastModified($import . '.less', $newest);
+						$callback($import . '.less');
 					}
-				} else {
-					$newest = $this->getLastModified($import, $newest);
+				} else if(file_exists($file)) {
+					$callback($file);
 				}
 			}
 		}
 
 		unset($contents);
-
-		return $newest;
 	}
 
 	public function getMime() {

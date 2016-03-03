@@ -1,5 +1,6 @@
 <?php namespace Assets\Compilers;
 
+use Closure;
 use Symfony\Component\Process\Process;
 
 abstract class Compiler {
@@ -11,10 +12,27 @@ abstract class Compiler {
 
 	public abstract function compile($path, $context = null);
 
-	public abstract function getLastModified($file, $newest = 0);
+	public function getLastModified($file, $newest = 0) {
+		if(!file_exists($file)) {
+			return $newest;
+		}
+
+		$newest = max(@filemtime($file), $newest);
+
+		$this->enumerateImports($file, function($file) use (&$newest) {
+			$newest = $this->getLastModified($file, $newest);
+		});
+
+		return $newest;
+	}
 
 	public abstract function getMime();
 	public abstract function getType();
 	public abstract function getExtension();
+
+	protected function enumerateImports($file, Closure $callback) {
+		// Does nothing by default, subclasses that support imports
+		// should override and provider their own implementation.
+	}
 
 }

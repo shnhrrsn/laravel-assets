@@ -16,14 +16,6 @@ class JavascriptCompiler extends ProcessCompiler {
 		return new Process('uglifyjs --compress drop_console=true ' . escapeshellarg($path));
 	}
 
-	public function getLastModified($file, $newest = 0) {
-		if(!file_exists($file)) {
-			return $newest;
-		} else {
-			return max(filemtime($file), $newest);
-		}
-	}
-
 	public function getMime() {
 		return 'application/javascript';
 	}

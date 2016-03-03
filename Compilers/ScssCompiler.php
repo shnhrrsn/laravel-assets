@@ -1,5 +1,6 @@
 <?php namespace Assets\Compilers;
 
+use Closure;
 use Symfony\Component\Process\Process;
 
 class ScssCompiler extends ProcessCompiler {
@@ -16,13 +17,7 @@ class ScssCompiler extends ProcessCompiler {
 		return new Process('scss -t ' . $context . ' --compass --precision=14 ' . escapeshellarg($path));
 	}
 
-	public function getLastModified($file, $newest = 0) {
-		if(!file_exists($file)) {
-			return $newest;
-		}
-
-		$newest = max(@filemtime($file), $newest);
-
+	protected function enumerateImports($file, Closure $callback) {
 		$contents = file_get_contents($file);
 
 		if(preg_match_all('/@import\s?([^\s;]+)/is', $contents, $m)) {
@@ -44,21 +39,19 @@ class ScssCompiler extends ProcessCompiler {
 
 				if($ext !== '.scss' && $ext !== '.sass') {
 					if(file_exists($import . '.scss')) {
-						$newest = $this->getLastModified($import . '.scss', $newest);
+						$callback($import . '.scss');
 					} else if(file_exists($partial . '.scss')) {
-						$newest = $this->getLastModified($partial . '.scss', $newest);
+						$callback($partial . '.scss');
 					} else if(file_exists($import . '.sass')) {
-						$newest = $this->getLastModified($import . '.sass', $newest);
+						$callback($import . '.sass');
 					}
-				} else {
-					$newest = $this->getLastModified($import, $newest);
+				} else if(file_exists($import)) {
+					$callback($import);
 				}
 			}
 		}
 
 		unset($contents);
-
-		return $newest;
 	}
 
 	public function getMime() {

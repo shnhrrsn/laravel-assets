@@ -1,5 +1,6 @@
 <?php namespace Assets\Compilers;
 
+use Closure;
 use BadMethodCallException;
 
 use Symfony\Component\Process\Process;
@@ -37,12 +38,7 @@ class CoffeeCompiler extends ProcessCompiler {
 		throw new BadMethodCallException();
 	}
 
-	public function getLastModified($file, $newest = 0) {
-		if(!file_exists($file)) {
-			return $newest;
-		}
-
-		$newest = max(@filemtime($file), $newest);
+	protected function enumerateImports($file, Closure $callback) {
 		$contents = file_get_contents($file);
 
 		if(preg_match_all('/#import\s?([^\s;]+)/is', $contents, $m)) {
@@ -57,17 +53,15 @@ class CoffeeCompiler extends ProcessCompiler {
 
 				if($ext !== '.coffee') {
 					if(file_exists($import . '.coffee')) {
-						$newest = $this->getLastModified($import . '.coffee', $newest);
+						$callback($import . '.coffee');
 					}
-				} else {
-					$newest = $this->getLastModified($import, $newest);
+				} else if(file_exists($import)) {
+					$callback($import);
 				}
 			}
 		}
 
 		unset($contents);
-
-		return $newest;
 	}
 
 	public function getMime() {
