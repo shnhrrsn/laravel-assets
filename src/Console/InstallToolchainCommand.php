@@ -45,10 +45,12 @@ class InstallToolchainCommand extends BaseCommand {
 			$this->info(' --> Install NPM by running the following:');
 
 			if(stripos(PHP_OS, 'darwin') !== false) {
-				$this->info('   `sudo curl -L https://npmjs.org/install.sh | sh`');
+				$this->info('        `sudo curl -L https://npmjs.org/install.sh | sh`');
 			} else {
-				$this->info('   `sudo apt-get install npm -y`');
+				$this->info('        `sudo apt-get install npm -y`');
 			}
+
+			return;
 		}
 
 		if(!empty($gems) && !$this->hasBin('gem')) {
@@ -57,10 +59,12 @@ class InstallToolchainCommand extends BaseCommand {
 			$this->info(' --> Install RubyGems by running the following:');
 
 			if(stripos(PHP_OS, 'darwin') !== false) {
-				$this->error('   RubyGems should be preinstalled on Mac.  Please check your $PATH and try again.');
+				$this->error('        RubyGems should be preinstalled on Mac.  Please check your $PATH and try again.');
 			} else {
-				$this->info('   `sudo apt-get install rubygems -y`');
+				$this->info('        `sudo apt-get install rubygems -y`');
 			}
+
+			return;
 		}
 
 		foreach($npms as $npm) {
@@ -86,7 +90,7 @@ class InstallToolchainCommand extends BaseCommand {
 
 	private function installNpmPackage($package) {
 		$this->info('Installing ' . $package);
-		return $this->system('/usr/bin/env npm install -g ' . $package) == 0;
+		return $this->system('sudo /usr/bin/env npm install -g ' . $package) == 0;
 	}
 
 	private function installGemPackage($package) {
