@@ -10,6 +10,15 @@ return [
 	'auto_minify' => null,
 
 	/**
+		Extra paths that may not exist in the systems $PATH value
+	*/
+	'paths' => [
+		'/bin/',
+		'/usr/bin/',
+		'/usr/local/bin/'
+	],
+
+	/**
 		* To register a compiler, set the key to a comma deliminated value
 		  of it’s file extension.
 		* All compiler classes must extend `Assets\Compilers\Compiler`.

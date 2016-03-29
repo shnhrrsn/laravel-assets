@@ -5,16 +5,12 @@ use Assets\Exceptions\CompilationException;
 
 abstract class ProcessCompiler extends Compiler {
 
-	protected $paths = [
-		'/bin/',
-		'/usr/bin/',
-		'/usr/local/bin/'
-	];
+	protected $paths = [ ];
 
 	public function __construct($autoMinify) {
 		parent::__construct($autoMinify);
 
-		$this->paths = array_filter($this->paths, function($path) {
+		$this->paths = array_filter(config('assets.paths', [ ]), function($path) {
 			return file_exists($path);
 		});
 	}
@@ -39,7 +35,7 @@ abstract class ProcessCompiler extends Compiler {
 
 	protected function compileProcess(Process $process, $path) {
 		$process->setEnv([
-			'PATH' => trim(`echo \$PATH`) . ':' . implode(':', $this->paths)
+			'PATH' => implode(':', array_merge([ trim(`echo \$PATH`) ], $this->paths))
 		]);
 
 		$out = '';
