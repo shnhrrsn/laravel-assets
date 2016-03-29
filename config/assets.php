@@ -19,7 +19,18 @@ return [
 
 	'compilers' => [
 
-		'scss,sass' => Assets\Compilers\ScssCompiler::class,
+		'scss,sass' => [
+			'class' => Assets\Compilers\ScssCompiler::class,
+			'options' => [
+				'bin' => 'scss',
+				'include_paths' => [ ],
+				'arguments' => [
+					'--precision=14',
+					'--compass'
+				]
+			]
+		],
+
 		'less' => Assets\Compilers\LessCompiler::class,
 		'coffee' => Assets\Compilers\CoffeeCompiler::class,
 		'js' => Assets\Compilers\JavascriptCompiler::class,

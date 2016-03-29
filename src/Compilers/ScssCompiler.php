@@ -3,6 +3,17 @@
 use Closure;
 
 class ScssCompiler extends ProcessCompiler {
+	public $bin;
+	public $includePaths = [ ];
+	public $options = [ ];
+
+	public function __construct($autoMinify, array $options = [ ]) {
+		parent::__construct($autoMinify);
+
+		$this->bin = array_get($options, 'bin', 'scss');
+		$this->includePaths = (array)array_get($options, 'include_paths', [ ]);
+		$this->options = (array)array_get($options, 'arguments', [ ]);
+	}
 
 	protected function getCompileProcess($path, $context = null) {
 		if(empty($context)) {
@@ -13,12 +24,24 @@ class ScssCompiler extends ProcessCompiler {
 			}
 		}
 
-		return $this->makeProcess('scss', [
-			'-t', $context,
-			'--compass',
-			'--precision=14',
-			$path
-		]);
+		$arguments = $this->options;
+
+		if(basename($this->bin) === 'node-sass') {
+			$arguments[] = '--output-style';
+		} else {
+			$arguments[] = '--style';
+		}
+
+		$arguments[] = $context;
+
+		foreach($this->includePaths as $includePath) {
+			$arguments[] = '--include-path';
+			$arguments[] = $includePath;
+		}
+
+		$arguments[] = $path;
+
+		return $this->makeProcess($this->bin, $arguments);
 	}
 
 	protected function enumerateImports($file, Closure $callback) {
