@@ -24,9 +24,10 @@ class ScssCompiler extends ProcessCompiler {
 			}
 		}
 
+		$node = basename($this->bin) === 'node-sass';
 		$arguments = $this->options;
 
-		if(basename($this->bin) === 'node-sass') {
+		if($node) {
 			$arguments[] = '--output-style';
 		} else {
 			$arguments[] = '--style';
@@ -35,7 +36,12 @@ class ScssCompiler extends ProcessCompiler {
 		$arguments[] = $context;
 
 		foreach($this->includePaths as $includePath) {
-			$arguments[] = '--include-path';
+			if($node) {
+				$arguments[] = '--include-path';
+			} else {
+				$arguments[] = '--load-path';
+			}
+
 			$arguments[] = $includePath;
 		}
 
