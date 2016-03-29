@@ -1,7 +1,6 @@
 <?php namespace Assets\Compilers;
 
 use Closure;
-use Symfony\Component\Process\Process;
 
 class ScssCompiler extends ProcessCompiler {
 
@@ -14,7 +13,12 @@ class ScssCompiler extends ProcessCompiler {
 			}
 		}
 
-		return new Process('scss -t ' . $context . ' --compass --precision=14 ' . escapeshellarg($path));
+		return $this->makeProcess('scss', [
+			'-t', $context,
+			'--compass',
+			'--precision=14',
+			$path
+		]);
 	}
 
 	protected function enumerateImports($file, Closure $callback) {

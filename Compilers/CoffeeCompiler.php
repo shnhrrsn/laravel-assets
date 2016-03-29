@@ -3,7 +3,6 @@
 use Closure;
 use BadMethodCallException;
 
-use Symfony\Component\Process\Process;
 use Assets\Exceptions\CompilationException;
 
 class CoffeeCompiler extends ProcessCompiler {
@@ -13,7 +12,7 @@ class CoffeeCompiler extends ProcessCompiler {
 		touch($tmp); // Ensures file always exists for unlinking
 
 		try {
-			$this->compileProcess(new Process('importer ' . escapeshellarg($path) . ' ' . escapeshellarg($tmp)), $path);
+			$this->compileProcess($this->makeProcess('importer', [ $path, $tmp ]), $path);
 		} catch(CompilationException $e) {
 			unlink($tmp);
 			throw $e;
@@ -25,7 +24,9 @@ class CoffeeCompiler extends ProcessCompiler {
 			return $output;
 		} else {
 			try {
-				return $this->compileProcess(new Process('uglifyjs --compress drop_console=true ' . escapeshellarg($tmp)), $path);
+				return $this->compileProcess($this->makeProcess('uglifyjs', [
+					'--compress', 'drop_console=true', $tmp
+				]), $path);
 			} catch(CompilationException $e) {
 				throw $e;
 			} finally {

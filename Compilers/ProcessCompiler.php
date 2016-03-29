@@ -25,6 +25,18 @@ abstract class ProcessCompiler extends Compiler {
 		return $this->compileProcess($this->getCompileProcess($path, $context), $path);
 	}
 
+	protected function makeProcess($command, array $arguments = null) {
+		$command = escapeshellcmd($command);
+
+		if($arguments !== null && !empty($arguments)) {
+			foreach($arguments as $argument) {
+				$command .= ' ' . escapeshellarg($argument);
+			}
+		}
+
+		return new Process($command);
+	}
+
 	protected function compileProcess(Process $process, $path) {
 		$process->setEnv([
 			'PATH' => trim(`echo \$PATH`) . ':' . implode(':', $this->paths)

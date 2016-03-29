@@ -1,12 +1,11 @@
 <?php namespace Assets\Compilers;
 
 use Closure;
-use Symfony\Component\Process\Process;
 
 class LessCompiler extends ProcessCompiler {
 
 	protected function getCompileProcess($path, $context = null) {
-		return new Process('lessc --yui-compress ' . escapeshellarg($path));
+		return $this->makeProcess('lessc', [ '--yui-compress', $path ]);
 	}
 
 	protected function enumerateImports($file, Closure $callback) {

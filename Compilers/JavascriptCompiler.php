@@ -1,7 +1,5 @@
 <?php namespace Assets\Compilers;
 
-use Symfony\Component\Process\Process;
-
 class JavascriptCompiler extends ProcessCompiler {
 
 	public function compile($path, $context = null) {
@@ -13,7 +11,11 @@ class JavascriptCompiler extends ProcessCompiler {
 	}
 
 	protected function getCompileProcess($path, $context = null) {
-		return new Process('uglifyjs --compress drop_console=true ' . escapeshellarg($path));
+		return $this->makeProcess('uglifyjs', [
+			'--compress',
+			' drop_console=true',
+			$path
+		]);
 	}
 
 	public function getMime() {
