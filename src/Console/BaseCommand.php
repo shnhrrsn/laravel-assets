@@ -3,7 +3,7 @@
 abstract class BaseCommand extends \Illuminate\Console\Command {
 
 	protected function removeAsset($asset) {
-		@unlink($asset);
+		@unlink(public_path($asset));
 	}
 
 }
