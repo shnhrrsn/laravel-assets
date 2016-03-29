@@ -17,10 +17,10 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"Assets\\": ""
+			"Assets\\": "src/"
 		},
 		"files": [
-			"helpers.php"
+			"src/helpers.php"
 		]
 	},
 	"suggest": {
