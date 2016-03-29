@@ -81,20 +81,20 @@ class InstallToolchainCommand extends BaseCommand {
 	}
 
 	private function hasBin($bin) {
-		return $this->run('/usr/bin/env which ' . escapeshellarg($bin) .' > /dev/null') == 0;
+		return $this->system('/usr/bin/env which ' . escapeshellarg($bin) .' > /dev/null') == 0;
 	}
 
 	private function installNpmPackage($package) {
 		$this->info('Installing ' . $package);
-		return $this->run('/usr/bin/env npm install -g ' . $package) == 0;
+		return $this->system('/usr/bin/env npm install -g ' . $package) == 0;
 	}
 
 	private function installGemPackage($package) {
 		$this->info('Installing ' . $package);
-		return $this->run('sudo /usr/bin/env gem install ' . $package) == 0;
+		return $this->system('sudo /usr/bin/env gem install ' . $package) == 0;
 	}
 
-	private function run($command) {
+	private function system($command) {
 		$exitCode = 0;
 		system($command, $exitCode);
 		return $exitCode;
