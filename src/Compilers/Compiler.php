@@ -6,7 +6,7 @@ use Symfony\Component\Process\Process;
 abstract class Compiler {
 	protected $autoMinify;
 
-	public function __construct($autoMinify) {
+	public function __construct($autoMinify, array $options = [ ]) {
 		$this->autoMinify = $autoMinify;
 	}
 

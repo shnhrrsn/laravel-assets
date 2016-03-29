@@ -24,7 +24,14 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 		Asset::$autoMinifyDefault = $autoMinify;
 
 		foreach($config->get('assets.compilers', [ ]) as $extensions => $class) {
-			$compiler = new $class($autoMinify);
+			$options = [ ];
+
+			if(is_array($class)) {
+				$options = array_get($class, 'options', [ ]);
+				$class = $class['class'];
+			}
+
+			$compiler = new $class($autoMinify, $options);
 
 			foreach(explode(',', $extensions) as $extension) {
 				Asset::registerCompiler($extension, $compiler);
