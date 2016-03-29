@@ -22,8 +22,6 @@ class PublishCommand extends BaseCommand {
 	public function fire() {
 		$app = $this->laravel;
 
-		Asset::$autoMinifyDefault = $app->environment('production');
-
 		$this->resourcesPath = base_path('resources');
 		$this->assetsPath = base_path('resources/assets');
 		$this->publishPath = public_path();

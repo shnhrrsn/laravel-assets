@@ -5,13 +5,7 @@ use Symfony\Component\Process\Process;
 
 class Asset {
 	public static $autoMinifyDefault = false;
-
-	protected static $compilers = [
-		'scss' => Compilers\ScssCompiler::class,
-		'less' => Compilers\LessCompiler::class,
-		'coffee' => Compilers\CoffeeCompiler::class,
-		'js' => Compilers\JavascriptCompiler::class
-	];
+	protected static $compilers = [ ];
 
 	protected $autoMinify;
 	protected $path;
