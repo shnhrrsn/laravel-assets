@@ -50,7 +50,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 
 		$this->commands(
 			Console\PublishCommand::class,
-			Console\UnpublishCommand::class
+			Console\UnpublishCommand::class,
+			Console\InstallToolchainCommand::class
 		);
 
 		if(class_exists('\Collective\Html\HtmlBuilder')) {

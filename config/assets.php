@@ -37,12 +37,38 @@ return [
 					'--precision=14',
 					'--compass'
 				]
+			],
+			'toolchain' => [
+				'gem' => [
+					'scss' => 'sass',
+					'compass' => 'compass'
+				]
 			]
 		],
 
-		'less' => Assets\Compilers\LessCompiler::class,
-		'coffee' => Assets\Compilers\CoffeeCompiler::class,
-		'js' => Assets\Compilers\JavascriptCompiler::class,
+		'less' => [
+			'class' => Assets\Compilers\LessCompiler::class,
+			'toolchain' => [
+				'npm' => [ 'lessc' => 'less' ]
+			]
+		],
+
+		'coffee' => [
+			'class' => Assets\Compilers\CoffeeCompiler::class,
+			'toolchain' => [
+				'npm' => [
+					'coffee' => 'coffee-script',
+					'importer' => 'importer'
+				]
+			]
+		],
+
+		'js' => [
+			'class' => Assets\Compilers\JavascriptCompiler::class,
+			'toolchain' => [
+				'npm' => [ 'uglifyjs' => 'uglify-js' ]
+			]
+		],
 
 	]
 
