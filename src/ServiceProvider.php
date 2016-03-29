@@ -10,7 +10,12 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 	}
 
 	public function register() {
-		$this->mergeConfigFrom($this->configPath, 'assets');
+		// NOTE: mergeConfigFrom isn’t used because it does array_merge, not array_replace_recursive
+
+		$key = 'assets';
+		$config = $this->app['config'];
+
+		$config->set($key, array_replace_recursive(require $this->configPath, $config->get($key, [ ])));
 	}
 
 	public function boot() {
