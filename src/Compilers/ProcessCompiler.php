@@ -35,7 +35,7 @@ abstract class ProcessCompiler extends Compiler {
 
 	protected function compileProcess(Process $process, $path) {
 		$process->setEnv([
-			'PATH' => implode(':', array_merge([ trim(`echo \$PATH`) ], $this->paths))
+			'PATH' => implode(':', array_merge($this->paths, [ trim(`echo \$PATH`) ]))
 		]);
 
 		$out = '';
