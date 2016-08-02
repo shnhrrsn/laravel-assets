@@ -16,8 +16,7 @@ class PublishCommand extends BaseCommand {
 	protected $publishPath;
 	protected $assets = [ ];
 	protected $oldAssets = [ ];
-
-	protected $rawDirs = [ 'img', 'fonts', 'font', 'css' ];
+	protected $rawDirs = [ ];
 
 	public function fire() {
 		$app = $this->laravel;
@@ -26,6 +25,7 @@ class PublishCommand extends BaseCommand {
 		$this->assetsPath = base_path('resources/assets');
 		$this->publishPath = public_path();
 		$this->oldAssets = $this->loadOldAssets();
+		$this->rawDirs = config('assets.raw_dirs');
 
 		if(empty($this->oldAssets)) {
 			$this->oldAssets = [ ];

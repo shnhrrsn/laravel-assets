@@ -19,6 +19,14 @@ return [
 	],
 
 	/**
+		When compiling, these dirs will be copied over as is
+		without any processing
+	*/
+	'raw_dirs' => [
+		'img', 'fonts', 'font', 'css'
+	],
+
+	/**
 		* To register a compiler, set the key to a comma deliminated value
 		  of it’s file extension.
 		* All compiler classes must extend `Assets\Compilers\Compiler`.
