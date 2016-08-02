@@ -8,7 +8,6 @@ class InstallToolchainCommand extends BaseCommand {
 
 	public function fire() {
 		$npms = [ ];
-		$gems = [ ];
 
 		foreach(config('assets.compilers') as $compiler) {
 			if(!is_array($compiler)) {
@@ -18,15 +17,6 @@ class InstallToolchainCommand extends BaseCommand {
 			$toolchain = array_get($compiler, 'toolchain');
 			if(!is_array($toolchain)) {
 				continue;
-			}
-
-			$gem = array_get($toolchain, 'gem');
-			if(is_array($gem)) {
-				foreach($gem as $bin => $name) {
-					if(!$this->hasBin($bin)) {
-						$gems[] = $name;
-					}
-				}
 			}
 
 			$npm = array_get($toolchain, 'npm');
@@ -53,30 +43,9 @@ class InstallToolchainCommand extends BaseCommand {
 			return;
 		}
 
-		if(!empty($gems) && !$this->hasBin('gem')) {
-			$this->error('ERROR: RubyGems not installed');
-			$this->info(' --> RubyGems needs to be installed before running ' . $this->name);
-			$this->info(' --> Install RubyGems by running the following:');
-
-			if(stripos(PHP_OS, 'darwin') !== false) {
-				$this->error('        RubyGems should be preinstalled on Mac.  Please check your $PATH and try again.');
-			} else {
-				$this->info('        `sudo apt-get install rubygems -y`');
-			}
-
-			return;
-		}
-
 		foreach($npms as $npm) {
 			if(!$this->installNpmPackage($npm)) {
 				$this->error(' --> Unable to install “' . $npm .'”, aborting.');
-				return;
-			}
-		}
-
-		foreach($gems as $gem) {
-			if(!$this->installGemPackage($gem)) {
-				$this->error(' --> Unable to install “' . $gem .'”, aborting.');
 				return;
 			}
 		}
@@ -91,11 +60,6 @@ class InstallToolchainCommand extends BaseCommand {
 	private function installNpmPackage($package) {
 		$this->info('Installing ' . $package);
 		return $this->system('sudo /usr/bin/env npm install -g ' . $package) == 0;
-	}
-
-	private function installGemPackage($package) {
-		$this->info('Installing ' . $package);
-		return $this->system('sudo /usr/bin/env gem install ' . $package) == 0;
 	}
 
 	private function system($command) {
