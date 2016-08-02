@@ -19,14 +19,7 @@ class InstallToolchainCommand extends BaseCommand {
 				continue;
 			}
 
-			$npm = array_get($toolchain, 'npm');
-			if(is_array($npm)) {
-				foreach($npm as $bin => $name) {
-					if(!$this->hasBin($bin)) {
-						$npms[] = $name;
-					}
-				}
-			}
+			$npms = array_merge($npms, array_get($toolchain, 'npm', [ ]));
 		}
 
 		if(!empty($npms) && !$this->hasBin('npm')) {
@@ -43,7 +36,34 @@ class InstallToolchainCommand extends BaseCommand {
 			return;
 		}
 
+		$packagePath = base_path('package.json');
+
+		if(!file_exists($packagePath)) {
+			$package = [ ];
+
+			if(file_exists(base_path('composer.json'))) {
+				$composer = json_decode(file_get_contents(base_path('composer.json')), true);
+
+				foreach([ 'name', 'version', 'description' ] as $key) {
+					if(isset($composer[$key])) {
+						$package[$key] = $composer[$key];
+					}
+				}
+			}
+
+			$package['private'] = true;
+			file_put_contents($packagePath, json_encode($package, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+		}
+
+		$package = json_decode(file_get_contents($packagePath), true);
+		$installed = array_keys(array_get($package, 'dependencies', [ ]));
+		$installed = array_merge($installed, array_keys(array_get($package, 'devDependencies', [ ])));
+
 		foreach($npms as $npm) {
+			if(in_array($npm, $installed)) {
+				continue;
+			}
+
 			if(!$this->installNpmPackage($npm)) {
 				$this->error(' --> Unable to install “' . $npm .'”, aborting.');
 				return;
@@ -59,7 +79,7 @@ class InstallToolchainCommand extends BaseCommand {
 
 	private function installNpmPackage($package) {
 		$this->info('Installing ' . $package);
-		return $this->system('sudo /usr/bin/env npm install -g ' . $package) == 0;
+		return $this->system('/usr/bin/env npm install --save ' . $package) == 0;
 	}
 
 	private function system($command) {

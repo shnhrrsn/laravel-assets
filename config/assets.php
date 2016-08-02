@@ -59,33 +59,28 @@ return [
 				]
 			],
 			'toolchain' => [
-                               'npm' => [
-                                       'node-sass' => 'node-sass',
-                               ]
+				'npm' => [ 'node-sass' ]
 			]
 		],
 
 		'less' => [
 			'class' => Assets\Compilers\LessCompiler::class,
 			'toolchain' => [
-				'npm' => [ 'lessc' => 'less' ]
+				'npm' => [ 'less' ]
 			]
 		],
 
 		'coffee' => [
 			'class' => Assets\Compilers\CoffeeCompiler::class,
 			'toolchain' => [
-				'npm' => [
-					'coffee' => 'coffee-script',
-					'importer' => 'importer'
-				]
+				'npm' => [ 'coffee-script' ]
 			]
 		],
 
 		'js' => [
 			'class' => Assets\Compilers\JavascriptCompiler::class,
 			'toolchain' => [
-				'npm' => [ 'uglifyjs' => 'uglify-js' ]
+				'npm' => [ 'uglify-js' ]
 			]
 		],
 
