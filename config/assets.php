@@ -1,5 +1,11 @@
 <?php
 
+$nodeModules = base_path('node_modules');
+
+if(!file_exists($nodeModules)) {
+	$nodeModules = null;
+}
+
 return [
 
 	/**
@@ -13,6 +19,7 @@ return [
 		Extra paths that may not exist in the systems $PATH value
 	*/
 	'paths' => [
+		'{{ node_modules }}/.bin/',
 		'/bin/',
 		'/usr/bin/',
 		'/usr/local/bin/'
@@ -25,6 +32,12 @@ return [
 	'raw_dirs' => [
 		'img', 'fonts', 'font', 'css'
 	],
+
+	/**
+		Used for node based compilers
+		Config can self-reference via {{ node_modules }}
+	*/
+	'node_modules' => $nodeModules,
 
 	/**
 		* To register a compiler, set the key to a comma deliminated value

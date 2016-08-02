@@ -10,12 +10,26 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 	}
 
 	public function register() {
+		if($this->app->configurationIsCached()) {
+			return;
+		}
+
 		// NOTE: mergeConfigFrom isn’t used because it does array_merge, not array_replace_recursive
 
 		$key = 'assets';
-		$config = $this->app['config'];
+		$repository = $this->app['config'];
+		$config = array_replace_recursive(require $this->configPath, $repository->get($key, [ ]));
 
-		$config->set($key, array_replace_recursive(require $this->configPath, $config->get($key, [ ])));
+		$macros = [
+			'node_modules' => array_get($config, 'node_modules', null)
+		];
+
+		$macros = array_combine(array_map(function($key) {
+			return '/\{\{\s*' . preg_quote($key) . '\s*\}\}/';
+		}, array_keys($macros)), array_values($macros));
+
+		$this->expandConfigMacros($config, $macros);
+		$repository->set($key, $config);
 	}
 
 	public function boot() {
@@ -68,6 +82,36 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 	    $this->publishes([
 	        $this->configPath => config_path('assets.php'),
 	    ]);
+	}
+
+	private function expandConfigMacros(&$config, $macros) {
+		$sequential = array_values($config) === $config;
+		$reindex = false;
+
+		foreach($config as $key => &$value) {
+			if(is_array($value)) {
+				$this->expandConfigMacros($value, $macros);
+				continue;
+			} else if(!is_string($value)) {
+				continue;
+			}
+
+			foreach($macros as $pattern => $replacement) {
+				if($replacement !== null) {
+					$value = preg_replace($pattern, $replacement, $value);
+					continue;
+				}
+
+				if(preg_match($pattern, $value)) {
+					$reindex = $sequential;
+					unset($config[$key]);
+				}
+			}
+		}
+
+		if($reindex) {
+			$config = array_values($config);
+		}
 	}
 
 }
