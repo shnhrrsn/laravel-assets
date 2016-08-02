@@ -64,6 +64,10 @@ class InstallToolchainCommand extends BaseCommand {
 				continue;
 			}
 
+			if(!$this->confirm('Do you want to install: ' . $npm . '?', true)) {
+				continue;
+			}
+
 			if(!$this->installNpmPackage($npm)) {
 				$this->error(' --> Unable to install “' . $npm .'”, aborting.');
 				return;
