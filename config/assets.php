@@ -52,18 +52,16 @@ return [
 		'scss,sass' => [
 			'class' => Assets\Compilers\ScssCompiler::class,
 			'options' => [
-				'bin' => 'scss',
+				'bin' => 'node-sass',
 				'include_paths' => [ ],
 				'arguments' => [
-					'--precision=14',
-					'--compass'
+					'--precision=14'
 				]
 			],
 			'toolchain' => [
-				'gem' => [
-					'scss' => 'sass',
-					'compass' => 'compass'
-				]
+                               'npm' => [
+                                       'node-sass' => 'node-sass',
+                               ]
 			]
 		],
 
