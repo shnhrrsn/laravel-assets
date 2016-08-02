@@ -73,7 +73,7 @@ return [
 		'coffee' => [
 			'class' => Assets\Compilers\CoffeeCompiler::class,
 			'toolchain' => [
-				'npm' => [ 'coffee-script' ]
+				'npm' => [ 'coffee-script', 'importer' ]
 			]
 		],
 
